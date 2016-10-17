@@ -10,14 +10,28 @@ class CalculationsController < ApplicationController
     # The special word the user input is in the string @special_word.
     # ================================================================================
 
+    user_text = nil
+    user_word = nil
+    user_text = @text.downcase
+    user_word = @special_word.downcase
 
-    @character_count_with_spaces = "Replace this string with your answer."
+    user_text_array = user_text.split(" ")
 
-    @character_count_without_spaces = "Replace this string with your answer."
+# @character_count_with_spaces = user_text_array
+    @character_count_with_spaces = user_text.length
 
-    @word_count = "Replace this string with your answer."
+i = 0
+total = 0
+while i < user_text_array.count
+  total = total + user_text_array[i].length
+  i = i + 1
+end
 
-    @occurrences = "Replace this string with your answer."
+@character_count_without_spaces = total
+
+    # @character_count_without_spaces = user_text.length - user_text.count(" ")
+    @word_count = user_text_array.count
+    @occurrences = user_text_array.count(user_word)
 
     # ================================================================================
     # Your code goes above.
@@ -38,7 +52,16 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+    apr = @apr
+    years = @years
+    principal = @principal
+
+    months = years*12
+    rate = apr/1200
+
+    user_payment = (principal*rate)*(1+rate)**months/((1+rate)**months-1)
+
+    @monthly_payment = user_payment
 
     # ================================================================================
     # Your code goes above.
@@ -60,12 +83,17 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+
+start_time = @starting
+end_time = @ending
+time_diff = end_time - start_time
+
+    @seconds = time_diff
+    @minutes = time_diff/60
+    @hours = @minutes/60
+    @days = @hours/24
+    @weeks = @days/7
+    @years = @days/365.25
 
     # ================================================================================
     # Your code goes above.
@@ -82,27 +110,76 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
 
-    @count = "Replace this string with your answer."
+numbers = @numbers
 
-    @minimum = "Replace this string with your answer."
 
-    @maximum = "Replace this string with your answer."
+    @sorted_numbers = numbers.sort
 
-    @range = "Replace this string with your answer."
+    @count = numbers.count
 
-    @median = "Replace this string with your answer."
+    @minimum = numbers.sort[0]
 
-    @sum = "Replace this string with your answer."
+    @maximum = numbers.sort[numbers.count-1]
 
-    @mean = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @variance = "Replace this string with your answer."
+      leftover = numbers.count % 2
+      if leftover == 1
+        #remember this does INTEGER division!
+      median = numbers[numbers.count / 2]
 
-    @standard_deviation = "Replace this string with your answer."
+      elsif leftover == 0
+      median = (numbers[numbers.count / 2 + 1 - 1] + numbers[numbers.count / 2 - 1])/2
+      end
 
-    @mode = "Replace this string with your answer."
+
+
+    @median = median
+
+    # My summing code!!!!!
+
+    x = 0
+    sum = 0
+
+    while x < numbers.count
+      sum = sum + numbers[x]
+      x = x+1
+    end
+
+    @sum = sum
+
+
+    @mean = @sum/numbers.count
+
+      variance_intermediate = numbers.map{|x| (x-@mean)**2}
+
+      x = 0
+      sum = 0
+
+      while x < numbers.count
+        sum = sum + variance_intermediate[x]
+        x = x+1
+      end
+
+      variance = sum/(numbers.count)
+
+    @variance = variance
+
+    @standard_deviation = variance**(0.5)
+
+
+    user_mode = 0
+    last_highest = 0
+
+    numbers.each do |i|
+    if numbers.count(numbers[i]) > last_highest
+      user_mode = numbers[i]
+    end
+  end
+
+
+    @mode = user_mode
 
     # ================================================================================
     # Your code goes above.
